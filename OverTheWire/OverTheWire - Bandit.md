@@ -1,32 +1,32 @@
 *Complete entire game to master the linux/unix CMI* [here](https://overthewire.org/wargames/bandit/)
 1. If you are stuck, avoid immediately looking up the solution but instead research on the techniques that might help you solve the level.
-2. ***Commands you may need to solve this *** contains important commands that you should learn about/know. Look them all up if you can.
+2. ***Commands you may need to solve this*** contains important commands that you should learn about/know. Look them all up if you can.
 ```cmd
 ssh bandit0@bandit.labs.overthewire.org -p 2220
 ```
 [ 0-1](#0-1) | [ 1-2](#1-2) |
-[ 2-3](#2-3)|
-[ 3-4](#3-4)|
-[ 4-5](#4-5)|
-[ 5-6](#5-6)|
-[ 6-7](#6-7)|
-[ 7-8](#7-8)|
-[ 8-9](#8-9)|
-[ 9-10](#9-10)|
-[ 10-11](#10-11)|
-[ 11-12](#11-12)|
-[ 12-13](#12-13)|
-[ 13-14](#13-14)|
-[ 14-15](#14-15)|
-[ 15-16](#15-16)|
-[ 16-17](#16-17)|
-[ 17-18](#17-18)|
-[ 18-19](#18-19)|
-[ 19-20](#19-20)|
-[ 20-21](#20-21)|
-[ 21-22](#21-22)|
-[ 22-23](#22-23)|
-[ 23-24](#23-24)|
+[ 2-3](#2-3) |
+[ 3-4](#3-4) |
+[ 4-5](#4-5) |
+[ 5-6](#5-6) |
+[ 6-7](#6-7) |
+[ 7-8](#7-8) |
+[ 8-9](#8-9) |
+[ 9-10](#9-10) |
+[ 10-11](#10-11) |
+[ 11-12](#11-12) |
+[ 12-13](#12-13) |
+[ 13-14](#13-14) |
+[ 14-15](#14-15) |
+[ 15-16](#15-16) |
+[ 16-17](#16-17) |
+[ 17-18](#17-18) |
+[ 18-19](#18-19) |
+[ 19-20](#19-20) |
+[ 20-21](#20-21) |
+[ 21-22](#21-22) |
+[ 22-23](#22-23) |
+[ 23-24](#23-24) |
 
 # 0-1
 use common sense
@@ -68,7 +68,7 @@ ls
 -file00  -file01  -file02  -file03  -file04  -file05  -file06  -file07  -file08  -file09
 ```
 3. Running the [[file]] command on a file returns the file type and from there we can deduce the only human-readable file in the directory. 
-4. However it's tedious to run the command on every single file, plus we run into the problem of file starting with ```-```. We use the technique in [[OverTheWire - Bandit# 1-2| 1-2]] to tackle this. 
+4. However it's tedious to run the command on every single file, plus we run into the problem of file starting with ```-```. We use the technique in [[OverTheWire - Bandit# 1-2 | 1-2]] to tackle this. 
 5. ```file *``` would list down the types of all files in the directory and combining the technique above:
 ```cmd
 file ./*
@@ -96,7 +96,7 @@ The password for the next  is stored in a file somewhere under the **inhere** 
 **Solution**
 1. You could search for the file with separate conditions but it would be best if we can find a one line command that would only give return us one file. For this , just searching for the file with the correct size will do
 ```cmd
-du -a -b | grep 1033
+du -a -b  | grep 1033
 
 1033	./maybehere07/.file2
 ```
@@ -104,7 +104,7 @@ However, what if there are multiple files with the same size?
 
 2. [[find]] will list all files in a directory. There should also be enough options to combine the conditions
 ```cmd
-find . -type f -size 1033c ! -executable -exec file '{}' \; | grep ASCII
+find . -type f -size 1033c ! -executable -exec file '{}' \;  | grep ASCII
 
 ./maybehere07/.file2: ASCII text, with very long lines (1000)
 ```
@@ -113,9 +113,9 @@ find . -type f -size 1033c ! -executable -exec file '{}' \; | grep ASCII
 ```-size 1033c```: 1033 bytes in size and 
 ```! -executable```: are not executable,
 ```-exec file '{}' \;```: run the ```file``` command on every file found, ```{}``` represents the filename found by ```find```, ```\;``` marks the end of the command to be executed
-```| grep ASCII```: filter to display only those are human-readable (ASCII)
+``` | grep ASCII```: filter to display only those are human-readable (ASCII)
 
-learn about pipes (```|```) [[Linux CMI#pipes|here]]
+learn about pipes (``` |```) [[Linux CMI#pipes |here]]
 # 6-7
 **Problem**
 The password for the next  is stored **somewhere on the server** and has all of the following properties:
@@ -154,7 +154,7 @@ The password for the next  is stored in the file **data.txt** and is the only 
 1. the ```sort``` command sorts the lines in a text file alphabetically by default
 2. the ```uniq``` command filters out duplicate lines from the sorted input it received, ```-u``` tells it to only display the unique lines
 ```cmd
-sort data.txt | uniq -u
+sort data.txt  | uniq -u
 EN632PlfYiZbn3PhVK3XOGSlNInNE00t
 ```
 #  9-10
@@ -165,7 +165,7 @@ The password for the next  is stored in the file **data.txt** in one of the fe
 1. ```strings``` command extracts all readable strings from a file
 2. ```grep``` can be used to find the several = characters
 ```cmd
-strings data.txt | grep ===
+strings data.txt  | grep ===
 
 x]T========== theG)"
 ========== passwordk^
@@ -193,7 +193,7 @@ The password for the next  is stored in the file **data.txt**, where all lowerc
 1. this is a simple caesar cipher, [ROT13](https://en.wikipedia.org/wiki/ROT13)
 2. you can use online tools such as CyberChef to decrypt the cipher but there is also a command line solution with the ```tr``` command^[https://unix.stackexchange.com/questions/19772/how-does-tr-a-z-n-za-m-work]
 ```cmd
-cat data.txt | tr "A-Za-z" "N-ZA-Mn-za-m"
+cat data.txt  | tr "A-Za-z" "N-ZA-Mn-za-m"
 
 The password is JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
 ```
