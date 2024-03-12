@@ -2,24 +2,28 @@
 a mini CTF introduction course <br>
 notes and write-ups of ctfs solved (competition and practice)
 
-[General Skills](<#General Skills>)
+[General Skills](#general-skills) <br>
+[Forensics](#forensics) <br>
+[Web Exploitation](#web-exploit) <br>
+[Cryptography](#cryptography) <br>
+[Reverse Engineering](#reverse-engine)
 
-## General Skills
+## [<span id='general-skills'>General Skills</span>](general.md)
 
 - Linux CMI
 - Privilege Escalation
 
-## Forensics
+## <span id='forensics'>Forensics</span>
 
-## Web Exploitation
+## [<span id='web-exploit'>Web Exploitation</span>](web.md)
 
 - Cookies
 - SQL Injection
 - Deserialisation Vulnerabilities
 
-## Cryptography
+## <span id='cryptography'>Cryptography</span>
 
-## Reverse Engineering
+## <span id='reverse-engine'>Reverse Engineering</span>
 
 ## Binary Exploitation
 
