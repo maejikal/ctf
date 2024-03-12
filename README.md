@@ -1,6 +1,26 @@
 # ctf
-write-ups of ctfs solved (competition and practice)
+a mini CTF introduction course <br>
+notes and write-ups of ctfs solved (competition and practice)
 
-<h1>2024</h1>
+[General Skills](<#General Skills>)
 
-<h1>2023</h1>
+## General Skills
+
+- Linux CMI
+- Privilege Escalation
+
+## Forensics
+
+## Web Exploitation
+
+- Cookies
+- SQL Injection
+- Deserialisation Vulnerabilities
+
+## Cryptography
+
+## Reverse Engineering
+
+## Binary Exploitation
+
+## Networking
