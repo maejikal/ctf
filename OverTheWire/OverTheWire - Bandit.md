@@ -4,6 +4,10 @@
 ```cmd
 ssh bandit0@bandit.labs.overthewire.org -p 2220
 ```
+<br>
+*not finished*
+
+
 [ 0-1](#0-1) | [ 1-2](#1-2) |
 [ 2-3](#2-3) |
 [ 3-4](#3-4) |
@@ -27,6 +31,14 @@ ssh bandit0@bandit.labs.overthewire.org -p 2220
 [ 21-22](#21-22) |
 [ 22-23](#22-23) |
 [ 23-24](#23-24) |
+[ 24-25](#23-24) |
+[ 25-26](#23-24) |
+[ 26-27](#23-24) |
+[ 27-28](#23-24) |
+[ 28-29](#23-24) |
+[ 29-30](#23-24) |
+[ 30-31](#23-24) | [ 31-32](#23-24) | [ 32-33](#23-24) |
+[ 33-34](#23-24) |
 
 # 0-1
 use common sense
@@ -45,7 +57,7 @@ use common sense
 The password for the next  is stored in a hidden file in the **inhere** directory.
 
 **Solution**
-1. List all the files in the directory with [[ls]]
+1. List all the files in the directory with ```ls```
 ```cmd
 ls -la
 
@@ -67,8 +79,8 @@ ls
 
 -file00  -file01  -file02  -file03  -file04  -file05  -file06  -file07  -file08  -file09
 ```
-3. Running the [[file]] command on a file returns the file type and from there we can deduce the only human-readable file in the directory. 
-4. However it's tedious to run the command on every single file, plus we run into the problem of file starting with ```-```. We use the technique in [[OverTheWire - Bandit# 1-2 | 1-2]] to tackle this. 
+3. Running the ```file``` command on a file returns the file type and from there we can deduce the only human-readable file in the directory. 
+4. However it's tedious to run the command on every single file, plus we run into the problem of file starting with ```-```. We use the technique in [1-2](#1-2) to tackle this. 
 5. ```file *``` would list down the types of all files in the directory and combining the technique above:
 ```cmd
 file ./*
@@ -102,20 +114,19 @@ du -a -b  | grep 1033
 ```
 However, what if there are multiple files with the same size? 
 
-2. [[find]] will list all files in a directory. There should also be enough options to combine the conditions
+2. ```find``` will list all files in a directory. There should also be enough options to combine the conditions
 ```cmd
 find . -type f -size 1033c ! -executable -exec file '{}' \;  | grep ASCII
 
 ./maybehere07/.file2: ASCII text, with very long lines (1000)
 ```
-```find .```: find in the current working directory,
-```-type f```: the regular files (as opposed to directories, symbolic links, etc.) that are
-```-size 1033c```: 1033 bytes in size and 
-```! -executable```: are not executable,
-```-exec file '{}' \;```: run the ```file``` command on every file found, ```{}``` represents the filename found by ```find```, ```\;``` marks the end of the command to be executed
+```find .```: find in the current working directory, <br>
+```-type f```: the regular files (as opposed to directories, symbolic links, etc.) that are <br>
+```-size 1033c```: 1033 bytes in size and <br>
+```! -executable```: are not executable, <br>
+```-exec file '{}' \;```: run the ```file``` command on every file found, <br>```{}``` represents the filename found by ```find```, ```\;``` marks the end of the command to be executed<br>
 ``` | grep ASCII```: filter to display only those are human-readable (ASCII)
 
-learn about pipes (``` |```) [[Linux CMI#pipes |here]]
 # 6-7
 **Problem**
 The password for the next  is stored **somewhere on the server** and has all of the following properties:
@@ -129,7 +140,7 @@ The password for the next  is stored **somewhere on the server** and has all o
 2. to find files owned by user bandit7, ```-user bandit7```
 3. to find files owned by group bandit6, ```-group bandit6```
 4. 33 bytes in size, ```-size 33c```
-5. hide ```Permission Denied``` errors^[https://stackoverflow.com/questions/762348/how-can-i-exclude-all-permission-denied-messages-from-find], ```2>/dev/null```: basically dumps all errors into the /dev/null directory
+5. hide ```Permission Denied``` errors, ```2>/dev/null```: basically dumps all errors into the /dev/null directory
 6. Together,
 ```cmd
 find / -type f -user bandit7 -group bandit6 -size 33c 2>/dev/null
@@ -191,7 +202,7 @@ The password for the next  is stored in the file **data.txt**, where all lowerc
 
 **Solution**
 1. this is a simple caesar cipher, [ROT13](https://en.wikipedia.org/wiki/ROT13)
-2. you can use online tools such as CyberChef to decrypt the cipher but there is also a command line solution with the ```tr``` command^[https://unix.stackexchange.com/questions/19772/how-does-tr-a-z-n-za-m-work]
+2. you can use online tools such as CyberChef to decrypt the cipher but there is also a command line solution with the ```tr``` command
 ```cmd
 cat data.txt  | tr "A-Za-z" "N-ZA-Mn-za-m"
 
@@ -202,25 +213,134 @@ The password is JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
 The password for the next  is stored in the file **data.txt**, which is a hexdump of a file that has been repeatedly compressed. For this  it may be useful to create a directory under /tmp in which you can work using mkdir. For example: mkdir /tmp/myname123. Then copy the datafile using cp, and rename it using mv (read the manpages!)
 
 **Solution**
+1. Create a directory to work on the file since we do not have permissions to work in the root directory.
+```cmd
+mktemp -d
+/tmp/tmp.sc0kPF5eiy
+```
+2. Copy ```data.txt``` into ```/tmp/tmp.sc0kPF5eiy```
+```cmd
+cd /tmp/tmp.sc0kPF5eiy
+cp ~/data.txt .
+```
+3. Reverse hexdump (data.txt) and output it into a file
+```cmd
+cat data.txt | xxd -r > compressed_data
+```
+```xxd```: tool used for generating/reversing hex dumps
+
+4. Running ```file``` on compressed_data,
+```cmd
+file compressed_data
+
+compressed_data: gzip compressed data, was "data2.bin", last modified: Thu Oct  5 06:19:20 2023, max compression, from Unix, original size modulo 2^32 573
+```
+5. Rename the file to its respective extension, decompress the gzip file
+```cmd
+mv compressed_data compressed.gz
+gzip -d compressed.gz
+```
+6. Repeat 4-5, checking the type of compressed data and use the correct method of decompressing until you get an ASCII text file
 #  13-14
 **Problem**
 The password for the next  is stored in **/etc/bandit_pass/bandit14 and can only be read by user bandit14**. For this , you don’t get the next password, but you get a private SSH key that can be used to log into the next . **Note:** **localhost** is a hostname that refers to the machine you are working on
-**Solution**
+**Solution** <br>
+There are 2 solutions to solve this:<br>
+**A.**
+1. We are given a private ssh key, what we need to do is extract it into our local machine (own computer, not the server machine) and then use the credentials to log into the next level
+2. ```scp``` can be used to transfer files between computers, run this command from your own terminal/command prompt (disconnected from game server)
+```cmd
+scp -P 2220 bandit13@bandit.labs.overthewire.org:sshkey.private .
+```
+3. Enter the password to complete the download
+4. Log in
+```cmd
+ssh -i sshkey.private bandit14@bandit.labs.overthewire.org -p 2220
+```
+
+You will get a permission error:
+```
+Permissions 0640 for 'sshkey.private' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+```
+
+5. Modify the key permissions such that only you can access it
+```cmd
+chmod 700 sshkey.private
+```
+6. Step 4
+
+**B.**
+1. Since you are already logged into bandit13, you can ssh to bandit14 directly via localhost without disconnecting from the game server. 
+```cmd
+ssh -i sshkey.private bandit14@localhost -p 2220
+```
 #  14-15
 **Problem**
 The password for the next  can be retrieved by submitting the password of the current  to **port 30000 on localhost**.
 **Solution**
+1. Use ```nc``` to connect to port 30000
+```cmd
+nc localhost 30000
+```
+2. Enter the password found in previous level
 #  15-16
 **Problem**
 The password for the next  can be retrieved by submitting the password of the current  to **port 30001 on localhost** using SSL encryption.
 **Helpful note: Getting “HEARTBEATING” and “Read R BLOCK”? Use -ign_eof and read the “CONNECTED COMMANDS” section in the manpage. Next to ‘R’ and ‘Q’, the ‘B’ command also works in this version of that command…**
 **Solution**
+1. ```openssl``` is the foundation of secure communications on the internet (https) 
+```cmd
+openssl s_client -connect localhost:30001
 
+CONNECTED(00000003)
+Can't use SSL_get_servername
+...
+---
+read R BLOCK
+```
+2. After running the above, there will be a prompt on the line after read R BLOCK, paste the password and you will be given the password for the next level
 #  16-17
 **Problem**
 The credentials for the next  can be retrieved by submitting the password of the current  to **a port on localhost in the range 31000 to 32000**. First find out which of these ports have a server listening on them. Then find out which of those speak SSL and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it.
 **Solution**
+1. To scan for an open port, use ```nmap```. Checking the help page, 
+```cmd
+nmap -h
 
+Usage: nmap [Scan Type(s)] [Options] {target specification}
+...
+SERVICE/VERSION DETECTION:
+  -sV: Probe open ports to determine service/version info
+...
+PORT SPECIFICATION AND SCAN ORDER:
+  -p <port ranges>: Only scan specified ports
+    Ex: -p22; -p1-65535; -p U:53,111,137,T:21-25,80,139,8080,S:9
+    ---
+```
+2. Since the port is on localhost and in the range 31000-32000, follow the usage guide above
+```cmd
+nmap -sV localhost -p31000-32000
+
+PORT      STATE SERVICE     VERSION
+31046/tcp open  echo
+31518/tcp open  ssl/echo
+31691/tcp open  echo
+31790/tcp open  ssl/unknown
+31960/tcp open  echo
+```
+3. Only port 31790 doesn't echo back whatever you send it, seems promising
+```cmd
+openssl s_client localhost:31790
+
+CONNECTED(00000003)
+Can't use SSL_get_servername
+...
+---
+read R BLOCK
+```
+4. Enter the password for current level
 #  17-18
 **Problem**
 There are 2 files in the homedirectory: **passwords.old and passwords.new**. The password for the next  is in **passwords.new** and is the only line that has been changed between **passwords.old and passwords.new**
